@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 import sqlite3
 from datetime import datetime, timedelta
 
-bot = Bot(token='8429888941:AAEDvohMaiRkLNHw37JO_fZGZfi1L27ysSQ')
+bot = Bot(token='7883946679:AAE_NQq05loFFjRgdEeSYV1WRsSgy97MZQw')
 dp = Dispatcher(bot)
 
 ADMIN_ID = 1341872330
