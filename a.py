@@ -15,7 +15,7 @@ dp = Dispatcher(bot, storage=storage)
 ADMIN_ID = 1341872330
 
 # اتصال به دیتابیس
-conn = sqlite3.connect('/root/bot/user.db')  # مسیر دیتابیس اصلاح‌شده
+conn = sqlite3.connect('user.db')  # مسیر دیتابیس اصلاح‌شده
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, join_date TEXT)''')
 conn.commit()
