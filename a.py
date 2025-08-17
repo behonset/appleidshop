@@ -7,7 +7,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 # تنظیم توکن ربات
-bot = Bot(token='8429888941:AAEDvohMaiRkLNHw37JO_fZGZfi1L27ysSQ')
+bot = Bot(token='7883946679:AAE_NQq05loFFjRgdEeSYV1WRsSgy97MZQw')
 # اضافه کردن MemoryStorage به Dispatcher
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
