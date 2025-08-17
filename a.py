@@ -2,16 +2,20 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import sqlite3
 from datetime import datetime, timedelta
 
-bot = Bot(token='7883946679:AAE_NQq05loFFjRgdEeSYV1WRsSgy97MZQw')
-dp = Dispatcher(bot)
+# تنظیم توکن ربات
+bot = Bot(token='8429888941:AAEDvohMaiRkLNHw37JO_fZGZfi1L27ysSQ')
+# اضافه کردن MemoryStorage به Dispatcher
+storage = MemoryStorage()
+dp = Dispatcher(bot, storage=storage)
 
 ADMIN_ID = 1341872330
 
 # اتصال به دیتابیس
-conn = sqlite3.connect('user.db')
+conn = sqlite3.connect('/root/bot/user.db')  # مسیر دیتابیس اصلاح‌شده
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, join_date TEXT)''')
 conn.commit()
@@ -31,12 +35,15 @@ async def admin_panel(message: types.Message):
     if message.from_user.id != ADMIN_ID:
         await message.reply("دسترسی غیر مجاز")
         return
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    keyboard.add(InlineKeyboardButton("آمار", callback_data='stats'))
-    keyboard.add(InlineKeyboardButton("ارسال همگانی", callback_data='broadcast'))
-    keyboard.add(InlineKeyboardButton("سفارشات", callback_data='orders'))
-    keyboard.add(InlineKeyboardButton("محصولات", callback_data='products'))
-    keyboard.add(InlineKeyboardButton("تنظیمات", callback_data='settings'))
+    keyboard = InlineKeyboardMarkup(row_width=2)  # تنظیم دو دکمه در هر ردیف
+    buttons = [
+        InlineKeyboardButton("آمار", callback_data='stats'),
+        InlineKeyboardButton("ارسال همگانی", callback_data='broadcast'),
+        InlineKeyboardButton("سفارشات", callback_data='orders'),
+        InlineKeyboardButton("محصولات", callback_data='products'),
+        InlineKeyboardButton("تنظیمات", callback_data='settings'),
+    ]
+    keyboard.add(*buttons)  # اضافه کردن دکمه‌ها به‌صورت دوتایی
     await message.reply("داشبورد ادمین", reply_markup=keyboard)
 
 # هندلر آمار
@@ -61,9 +68,8 @@ async def stats(callback_query: types.CallbackQuery):
     c.execute("SELECT COUNT(*) FROM users WHERE join_date >= ?", (week_ago_str,))
     week_users = c.fetchone()[0]
     
-    # موجودی انبار و سفارشات فعلا 0 (می‌توانید بعدا پیاده‌سازی کنید)
-    inventory = 0
-    total_orders = 0
+    inventory = 0  # موجودی انبار
+    total_orders = 0  # تعداد کل سفارشات
     
     text = f"تعداد کل کاربران: {total_users}\n"
     text += f"کاربران امروز اضافه شده: {today_users}\n"
